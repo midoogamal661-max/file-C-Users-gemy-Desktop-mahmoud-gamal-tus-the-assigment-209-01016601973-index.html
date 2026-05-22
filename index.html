@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ContactHub – Smart Contact Manager</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="contact-hub.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./bootstrap.min.css">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="/bootstrap.bundle.min.js">
+  <link rel="stylesheet" href="./main.js">
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-address-book"></i></div>
+      <div>
+        <div class="brand-name">Contact<span>Hub</span></div>
+        <div class="brand-sub">Smart Contact Manager</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="add-btn" onclick="openModal()"><i class="fa-solid fa-plus"></i> Add Contact</button>
+      <button class="icon-btn"><i class="fa-regular fa-bell"></i></button>
+      <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+      <img class="avatar" src="https://i.pravatar.cc/38?img=8" alt="avatar" />
+    </div>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="page-wrapper">
+    <div class="container-fluid px-0">
+
+      <!-- STAT CARDS -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-user-group"></i></div>
+            <div>
+              <div class="stat-label">Total</div>
+              <div class="stat-value" id="stat-total">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fa-solid fa-star"></i></div>
+            <div>
+              <div class="stat-label">Favorites</div>
+              <div class="stat-value" id="stat-fav">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="stat-card">
+            <div class="stat-icon red"><i class="fa-solid fa-heart-pulse"></i></div>
+            <div>
+              <div class="stat-label">Emergency</div>
+              <div class="stat-value" id="stat-emg">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="row g-4">
+
+        <!-- LEFT: contacts list -->
+        <div class="col-12 col-lg-8">
+          <div class="section-title">All Contacts</div>
+          <div class="section-sub" id="contacts-sub">Manage and organize your 0 contacts</div>
+
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input class="search-input" type="text" id="search-input" placeholder="Search by name, phone, or email..."
+              oninput="renderContacts()" />
+          </div>
+
+          <div class="mt-3">
+            <div id="contacts-list"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: sidebar -->
+        <div class="col-12 col-lg-4">
+          <div class="sidebar-card mb-3">
+            <div class="sidebar-header" style="background:#FFFBEB; border-bottom:1px solid #FEF3C7;">
+              <div class="sidebar-icon orange"><i class="fa-solid fa-star"></i></div>
+              <div>
+                <div class="sidebar-title">Favorites</div>
+                <div class="sidebar-sub">Quick access to starred contacts</div>
+              </div>
+            </div>
+            <div class="sidebar-body">
+              <div id="sidebar-fav">
+                <div class="sidebar-empty">No favorites yet</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <div class="sidebar-header" style="background:#FFF5F5; border-bottom:1px solid #FEE2E2;">
+              <div class="sidebar-icon red"><i class="fa-solid fa-heart-pulse"></i></div>
+              <div>
+                <div class="sidebar-title">Emergency</div>
+                <div class="sidebar-sub">Important contacts for urgent calls</div>
+              </div>
+            </div>
+            <div class="sidebar-body">
+              <div id="sidebar-emg">
+                <div class="sidebar-empty">No emergency contacts</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CONTACT MODAL -->
+  <div class="modal-backdrop-custom" id="modal" onclick="closeModalOutside(event)">
+    <div class="modal-box">
+     <div class="modal-content">
+       <div class="modal-title"><i class="fa-solid fa-user-plus" style="color:var(--purple);margin-right:8px;"></i>Add
+        New Contact</div>
+
+      <label class="form-label-custom">Full Name <span class="text-rose-500">*</span></label>
+      <input class="form-control-custom" id="inp-name" type="text" placeholder="enter full name" />
+
+      <label class="form-label-custom">Phone Number *</label>
+      <input class="form-control-custom" id="inp-phone" type="tel" placeholder=" +20 555 000 1234" />
+
+      <label class="form-label-custom">Email Address</label>
+      <input class="form-control-custom" id="inp-email" type="email" placeholder=" name@email.com" />
+
+      <label class="form-label-custom">Address</label>
+      <input class="form-control-custom" id="inp-email" type="email" placeholder="Enter address" />
+
+      <label class="block text-sm font-medium text-gray-700 mb-1.5">Group</label>
+      <select id="contactGroup" class="form-control-custom mb-4">
+        <option value="">Select a group</option>
+        <option value="family">Family</option>
+        <option value="friends">Friends</option>
+        <option value="work">Work</option>
+        <option value="school">School</option>
+        <option value="other">Other</option>
+      </select>
+
+
+      <label class="form-label-custom">notes</label>
+      <input class="form-control-custom" id="inp-email" type="email" placeholder="add notes about the contact" />
+
+      <div class="form-check-row">
+        <label class="check-label"><input type="checkbox" id="chk-fav" /> <i class="fa-solid fa-star"
+            style="color:#F59E0B;"></i> Favorite</label>
+        <label class="check-label"><input type="checkbox" id="chk-emg" /> <i class="fa-solid fa-heart-pulse"
+            style="color:#EF4444;"></i> Emergency</label>
+      </div>
+
+      <div class="modal-footer-btns">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" onclick="addContact()">Save Contact</button>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const AV_COLORS = ['av-purple', 'av-blue', 'av-teal', 'av-pink', 'av-green', 'av-orange'];
+    let contacts = [];
+    let colorIdx = 0;
+
+    function initials(name) {
+      return name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    function updateStats() {
+      document.getElementById('stat-total').textContent = contacts.length;
+      document.getElementById('stat-fav').textContent = contacts.filter(c => c.fav).length;
+      document.getElementById('stat-emg').textContent = contacts.filter(c => c.emg).length;
+      document.getElementById('contacts-sub').textContent = `Manage and organize your ${contacts.length} contact${contacts.length !== 1 ? 's' : ''}`;
+    }
+
+    function renderContacts() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      const filtered = contacts.filter(c =>
+        c.name.toLowerCase().includes(q) ||
+        c.phone.includes(q) ||
+        (c.email && c.email.toLowerCase().includes(q))
+      );
+
+      const list = document.getElementById('contacts-list');
+      if (filtered.length === 0) {
+        list.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon"><i class="fa-solid fa-address-card"></i></div>
+          <div class="empty-title">${contacts.length === 0 ? 'No contacts found' : 'No results found'}</div>
+          <div class="empty-sub">${contacts.length === 0 ? 'Click "Add Contact" to get started' : 'Try a different search term'}</div>
+        </div>`;
+        return;
+      }
+
+      list.innerHTML = `<div class="contacts-scroll">${filtered.map(c => `
+      <div class="contact-card">
+        <div class="contact-avatar ${c.color}">${initials(c.name)}</div>
+        <div class="contact-info">
+          <div class="contact-name">
+            ${c.name}
+            ${c.fav ? '<span class="tag-badge tag-fav"><i class="fa-solid fa-star"></i> Fav</span>' : ''}
+            ${c.emg ? '<span class="tag-badge tag-emg"><i class="fa-solid fa-heart-pulse"></i> SOS</span>' : ''}
+          </div>
+          <div class="contact-detail"><i class="fa-solid fa-phone" style="font-size:.7rem;margin-right:4px;"></i>${c.phone}${c.email ? ' · ' + c.email : ''}</div>
+        </div>
+        <div class="contact-actions">
+          <button class="contact-action-btn ${c.fav ? 'fav-active' : ''}" onclick="toggleFav(${c.id})" title="Favorite">
+            <i class="fa-${c.fav ? 'solid' : 'regular'} fa-star"></i>
+          </button>
+          <button class="contact-action-btn ${c.emg ? 'emg-active' : ''}" onclick="toggleEmg(${c.id})" title="Emergency">
+            <i class="fa-solid fa-heart-pulse"></i>
+          </button>
+          <button class="contact-action-btn" onclick="deleteContact(${c.id})" title="Delete" style="color:var(--text-light);">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>`).join('')}</div>`;
+    }
+
+    function renderSidebar() {
+      const favs = contacts.filter(c => c.fav);
+      const emgs = contacts.filter(c => c.emg);
+
+      const sidebarItem = c => `
+      <div class="sidebar-contact">
+        <div class="sidebar-avatar ${c.color}">${initials(c.name)}</div>
+        <div>
+          <div class="sidebar-contact-name">${c.name}</div>
+          <div class="sidebar-contact-phone">${c.phone}</div>
+        </div>
+      </div>`;
+
+      document.getElementById('sidebar-fav').innerHTML = favs.length
+        ? favs.map(sidebarItem).join('')
+        : '<div class="sidebar-empty">No favorites yet</div>';
+
+      document.getElementById('sidebar-emg').innerHTML = emgs.length
+        ? emgs.map(sidebarItem).join('')
+        : '<div class="sidebar-empty">No emergency contacts</div>';
+    }
+
+    function refresh() { updateStats(); renderContacts(); renderSidebar(); }
+
+    function addContact() {
+      const name = document.getElementById('inp-name').value.trim();
+      const phone = document.getElementById('inp-phone').value.trim();
+      const email = document.getElementById('inp-email').value.trim();
+      if (!name || !phone) { alert('Name and phone are required.'); return; }
+
+      contacts.push({
+        id: Date.now(),
+        name, phone, email,
+        fav: document.getElementById('chk-fav').checked,
+        emg: document.getElementById('chk-emg').checked,
+        color: AV_COLORS[colorIdx++ % AV_COLORS.length]
+      });
+
+      closeModal();
+      refresh();
+    }
+
+    function deleteContact(id) {
+      contacts = contacts.filter(c => c.id !== id);
+      refresh();
+    }
+
+    function toggleFav(id) {
+      const c = contacts.find(c => c.id === id);
+      if (c) c.fav = !c.fav;
+      refresh();
+    }
+
+    function toggleEmg(id) {
+      const c = contacts.find(c => c.id === id);
+      if (c) c.emg = !c.emg;
+      refresh();
+    }
+
+    function openModal() {
+      document.getElementById('inp-name').value = '';
+      document.getElementById('inp-phone').value = '';
+      document.getElementById('inp-email').value = '';
+      document.getElementById('chk-fav').checked = false;
+      document.getElementById('chk-emg').checked = false;
+      document.getElementById('modal').classList.add('show');
+    }
+    function closeModal() { document.getElementById('modal').classList.remove('show'); }
+    function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+    refresh();
+  </script>
+</body>
+
+</html>
