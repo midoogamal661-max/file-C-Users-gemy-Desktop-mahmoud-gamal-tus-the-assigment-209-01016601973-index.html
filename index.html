@@ -141,7 +141,7 @@
       <input class="form-control-custom" id="inp-email" type="email" placeholder=" name@email.com" />
 
       <label class="form-label-custom">Address</label>
-      <input class="form-control-custom" id="inp-email" type="email" placeholder="Enter address" />
+      <input class="form-control-custom" id="inp-address" type="text" placeholder="Enter address" />
 
       <label class="block text-sm font-medium text-gray-700 mb-1.5">Group</label>
       <select id="contactGroup" class="form-control-custom mb-4">
@@ -155,7 +155,7 @@
 
 
       <label class="form-label-custom">notes</label>
-      <input class="form-control-custom" id="inp-email" type="email" placeholder="add notes about the contact" />
+      <input class="form-control-custom" id="inp-notes" type="text" placeholder="add notes about the contact" />
 
       <div class="form-check-row">
         <label class="check-label"><input type="checkbox" id="chk-fav" /> <i class="fa-solid fa-star"
@@ -261,14 +261,18 @@
       const name = document.getElementById('inp-name').value.trim();
       const phone = document.getElementById('inp-phone').value.trim();
       const email = document.getElementById('inp-email').value.trim();
+      const address = document.getElementById('inp-address').value.trim();
+      const group = document.getElementById('contactGroup').value;
+      const notes = document.getElementById('inp-notes').value.trim();
       if (!name || !phone) { alert('Name and phone are required.'); return; }
 
       contacts.push({
         id: Date.now(),
-        name, phone, email,
+        name, phone, email,address, group, notes,
         fav: document.getElementById('chk-fav').checked,
         emg: document.getElementById('chk-emg').checked,
-        color: AV_COLORS[colorIdx++ % AV_COLORS.length]
+        color: AV_COLORS[colorIdx++ % AV_COLORS.length],
+        
       });
 
       closeModal();
@@ -296,6 +300,10 @@
       document.getElementById('inp-name').value = '';
       document.getElementById('inp-phone').value = '';
       document.getElementById('inp-email').value = '';
+      document.getElementById('inp-address').value = '';
+      document.getElementById('contactGroup').value = '';
+      document.getElementById('inp-notes').value = '';
+
       document.getElementById('chk-fav').checked = false;
       document.getElementById('chk-emg').checked = false;
       document.getElementById('modal').classList.add('show');
